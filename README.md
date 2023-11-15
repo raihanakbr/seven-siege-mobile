@@ -76,7 +76,7 @@
 - Icon adalah widget yang digunakan untuk menampilkan ikon dengan berbagai gaya dan ukuran.
 - SnackBar adalah widget yang digunakan untuk menampilkan pesan ringkas di bagian bawah layar.
 
-### 3. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)
+### 3. Implementasi Checklist
 
 1. *Generate* proyek Flutter baru dengan nama `seven_siege` dengan menjalankan kode berikut.
     ```
@@ -219,4 +219,295 @@
         );
     }
     }
+    ```
+
+# Tugas 8
+
+### 1. Jelaskan perbedaan antara ```Navigator.push()``` dan ```Navigator.pushReplacement()```, disertai dengan contoh mengenai penggunaan kedua metode tersebut yang tepat!
+
+- **Navigator.push()** : Menambahkan suatu route ke dalam stack route yang dikelola oleh Navigator. Method ini menyebabkan route yang ditambahkan berada pada paling atas stack, sehingga route yang baru saja ditambahkan tersebut akan muncul dan ditampilkan kepada pengguna
+    ```dart
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => HalamanKedua()),
+    );
+
+- **Navigator.pushReplacement()** : Menghapus route yang sedang ditampilkan kepada pengguna dan menggantinya dengan suatu route. Method ini menyebabkan aplikasi untuk berpindah dari route yang sedang ditampilkan kepada pengguna ke suatu route yang diberikan. Pada stack route yang dikelola Navigator, route lama pada atas stack akan digantikan secara langsung oleh route baru yang diberikan tanpa mengubah kondisi elemen stack yang berada di bawahnya.
+    ```dart
+    Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => HalamanKedua()),
+    );
+
+    ```
+
+### 2. Jelaskan masing-masing layout widget pada Flutter dan konteks penggunaannya masing-masing!
+
+- **Container**: Kita dapat menambahkan padding, margin, border, dan warna latar belakang seperti properti dalam widget ini dan kita dapat menyesuaikannya sesuai kebutuhan kita1.
+- **Row dan Column**: Widget ini digunakan untuk menata sejumlah widget anak secara horizontal (Row) atau vertikal (Column). Anda dapat menentukan bagaimana widget anak harus ditempatkan dan berapa banyak ruang yang harus mereka tempati2.
+- **ListView**: Untuk menampilkan anak-anaknya satu demi satu dalam arah scroll.
+- **Padding**: Digunakan untuk memberikan jarak antara widget dan widget lainnya di sekelilingnya2.
+- **Align**: Digunakan untuk menyelaraskan widget anaknya dalam dirinya sendiri dan secara opsional mengatur ukurannya berdasarkan ukuran anaknya2.
+- **Center**: Digunakan untuk memusatkan widget anaknya dalam dirinya sendiri-sendiri.
+
+### 3. Sebutkan apa saja elemen input pada form yang kamu pakai pada tugas kali ini dan jelaskan mengapa kamu menggunakan elemen input tersebut!
+
+- **Nama Item**: Elemen input ini menggunakan widget TextFormField dengan validator yang memeriksa apakah nilai input kosong atau tidak. Elemen ini digunakan untuk memasukkan nama item yang akan ditambahkan ke daftar belanja.
+- **Jumlah**: Elemen input ini juga menggunakan widget TextFormField. Validatornya memeriksa apakah nilai input kosong dan apakah nilai tersebut berupa angka. Elemen ini digunakan untuk memasukkan jumlah item yang akan dibeli.
+- **Harga**: Sama seperti elemen input “Jumlah”, elemen input “Harga” juga menggunakan widget TextFormField dengan validator yang sama. Elemen ini digunakan untuk memasukkan harga per item.
+- **Deskripsi**: Elemen input ini menggunakan widget TextFormField dengan validator yang memeriksa apakah nilai input kosong atau tidak. Elemen ini digunakan untuk memasukkan deskripsi item.
+
+### 4. Bagaimana penerapan clean architecture pada aplikasi Flutter?
+
+Clean Architecture adalah prinsip desain perangkat lunak yang mempromosikan pemisahan tanggung jawab dan bertujuan untuk menciptakan basis kode yang modular, dapat diskalakan, dan dapat diuji1. Berikut adalah cara penerapannya dalam Flutter:
+
+- **Layer Domain**: Layer ini berfungsi sebagai inti dari aplikasi yang berisi logika bisnis dan model data2.
+- **Layer Aplikasi**: Layer ini mengimplementasikan use case dari aplikasi dan menjembatani layer infrastruktur dan presentasi2.
+- **Layer Infrastruktur**: Layer ini berurusan dengan interaksi dengan dunia luar termasuk database, server web, antarmuka pengguna2.
+- **Layer Presentasi**: Layer ini berisi kode yang merender antarmuka pengguna di mana permintaan dibuat dan respons dikembalikan2.
+- **Penerapan Prinsip-Prinsip**: Prinsip-prinsip seperti Single Responsibility Principle dan Dependency Injection diterapkan untuk memastikan setiap bagian sistem memenuhi peran yang bermakna dan intuitif sambil memaksimalkan kemampuannya untuk beradaptasi dengan perubahan3.
+- **Aturan Ketergantungan**: Kode sumber hanya bergantung ke dalam. Ini berarti modul ke dalam tidak sadar atau bergantung pada modul luar. Namun, modul luar sadar dan bergantung pada modul dalam3.
+- **Pembagian Layer**: Membagi setiap layer menjadi sub-layer dan menetapkan hierarki ketergantungan yang jelas adalah aspek penting dalam membangun aplikasi yang kuat
+
+### 5. Implementasi Checklist
+
+- Membuat ```itemlist_form.dart``` pada folder ```lib```
+- Menambahkan empat elemen input, yaitu name, amount, price dan description
+    ```dart
+    String _name = "";
+    int _price = 0;
+    int _amount = 0;
+    String _description = "";
+    ```
+- Menambahkan tombol *save* sebagai berikut
+    ```dart
+                Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.indigo),
+                    ),
+                    onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                        items.add(Item(
+                            name: _name,
+                            amount: _amount,
+                            price: _price,
+                            description: _description,
+                        ));
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                            return AlertDialog(
+                                title: const Text('Card berhasil tersimpan'),
+                                content: SingleChildScrollView(
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    Text('Nama: $_name'),
+                                    Text('Jumlah: $_amount'),
+                                    Text('Harga: $_price'),
+                                    Text('Deskripsi: $_description'),
+                                    ],
+                                ),
+                                ),
+                                actions: [
+                                TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                    Navigator.pop(context);
+                                    },
+                                ),
+                                ],
+                            );
+                            },
+                        );
+                        }
+                        _formKey.currentState!.reset();
+                    },
+                    child: const Text(
+                        "Save",
+                        style: TextStyle(color: Colors.white),
+                    ),
+                    ),
+                ),
+                ),
+    ```
+- Menambahkan validasi input sebagai berikut
+    ```dart
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                    decoration: InputDecoration(
+                    hintText: "Nama Card",
+                    labelText: "Nama Card",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    ),
+                    onChanged: (String? value) {
+                    setState(() {
+                        _name = value!;
+                    });
+                    },
+                    validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                        return "Nama tidak boleh kosong!";
+                    }
+                    return null;
+                    },
+                ),
+                ),
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                    decoration: InputDecoration(
+                    hintText: "Jumlah",
+                    labelText: "Jumlah",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    ),
+                    onChanged: (String? value) {
+                    setState(() {
+                        _amount = int.parse(value!);
+                    });
+                    },
+                    validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                        return "Jumlah tidak boleh kosong!";
+                    }
+                    if (int.tryParse(value) == null) {
+                        return "Jumlah harus berupa angka!";
+                    }
+                    return null;
+                    },
+                ),
+                ),
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                    decoration: InputDecoration(
+                    hintText: "Harga",
+                    labelText: "Harga",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    ),
+                    onChanged: (String? value) {
+                    setState(() {
+                        _price = int.parse(value!);
+                    });
+                    },
+                    validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                        return "Harga tidak boleh kosong!";
+                    }
+                    if (int.tryParse(value) == null) {
+                        return "Harga harus berupa angka!";
+                    }
+                    return null;
+                    },
+                ),
+                ),
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                    decoration: InputDecoration(
+                    hintText: "Deskripsi",
+                    labelText: "Deskripsi",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    ),
+                    onChanged: (String? value) {
+                    setState(() {
+                        _description = value!;
+                    });
+                    },
+                    validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                        return "Deskripsi tidak boleh kosong!";
+                    }
+                    return null;
+                    },
+                ),
+                ),
+    ```
+- Mengarahkan pengguna ke halaman form tambah *item* baru ketika menekan tombol 'Tambah Card' pada halaman utama
+    ```dart
+    if (item.name == "Tambah Card") {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ItemFormPage()));
+    }
+    ```
+- Memunculkan data sesuai isi dari formulir yang diisi dalam sebuah *pop-up* setelah menekan tombol *Save* pada halaman formulir `Tambah Card` baru
+    ```dart
+                    onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                        items.add(Item(
+                            name: _name,
+                            amount: _amount,
+                            price: _price,
+                            description: _description,
+                        ));
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                            return AlertDialog(
+                                title: const Text('Card berhasil tersimpan'),
+                                content: SingleChildScrollView(
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    Text('Nama: $_name'),
+                                    Text('Jumlah: $_amount'),
+                                    Text('Harga: $_price'),
+                                    Text('Deskripsi: $_description'),
+                                    ],
+                                ),
+                                ),
+                                actions: [
+                                TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                    Navigator.pop(context);
+                                    },
+                                ),
+                                ],
+                            );
+                            },
+                        );
+                        }
+                        _formKey.currentState!.reset();
+                    },
+    ```
+- Membuat file `left_drawer.dart` pada folder widgets serta menambahkan tombol untuk *routing* ke halaman utama dan tambah *card* sebagai berikut
+    ```dart
+            ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: const Text('Halaman Utama'),
+                // Bagian redirection ke MyHomePage
+                onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyHomePage(),
+                    ));
+                },
+            ),
+            ListTile(
+                leading: const Icon(Icons.add_shopping_cart),
+                title: const Text('Tambah Card'),
+                // Bagian redirection ke ShopFormPage
+                onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ItemFormPage(),
+                    ));
+                },
+            ),
     ```
