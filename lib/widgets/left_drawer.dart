@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seven_siege/screens/itemlist_form.dart';
 import 'package:seven_siege/screens/itemlist_page.dart';
+import 'package:seven_siege/screens/list_item.dart';
 import 'package:seven_siege/screens/menu.dart';
 
 class LeftDrawer extends StatelessWidget {
@@ -74,6 +75,17 @@ class LeftDrawer extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => const ItemListPage(),
                   ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_basket),
+            title: const Text('Daftar Cards'),
+            onTap: () {
+              // Route menu ke halaman produk
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProductPage()),
+              );
             },
           ),
         ],

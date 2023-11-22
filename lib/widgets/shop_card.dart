@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:seven_siege/screens/itemlist_form.dart';
 import 'package:seven_siege/screens/itemlist_page.dart';
+import 'package:seven_siege/screens/list_item.dart';
+import 'package:seven_siege/screens/login.dart';
 
 class ShopItem {
   final String name;
@@ -14,12 +18,14 @@ class Item {
   final String name;
   final int amount;
   final int price;
+  final String category;
   final String description;
 
   Item({
     required this.name,
     required this.amount,
     required this.price,
+    required this.category,
     required this.description,
   });
 }
@@ -31,11 +37,12 @@ class ShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Material(
       color: item.color,
       child: InkWell(
         // Area responsive terhadap sentuhan
-        onTap: () {
+        onTap: () async {
           // Memunculkan SnackBar ketika diklik
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -46,11 +53,31 @@ class ShopCard extends StatelessWidget {
           if (item.name == "Tambah Card") {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const ItemFormPage()));
-          }
-
-          if (item.name == "Lihat Card") {
+          } else if (item.name == "Lihat Card") {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const ItemListPage()));
+          } else if (item.name == "Lihat Item") {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ProductPage()));
+          } else if (item.name == "Logout") {
+            final response = await request.logout(
+                // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                "http://127.0.0.1:8000/auth/logout/");
+            String message = response["message"];
+            if (response['status']) {
+              String uname = response["username"];
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("$message Sampai jumpa, $uname."),
+              ));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("$message"),
+              ));
+            }
           }
         },
         child: Container(
